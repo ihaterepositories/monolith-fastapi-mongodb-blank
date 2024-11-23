@@ -11,6 +11,7 @@ def create_ok(message: str, data: Any = None) -> BaseResponse:
     return BaseResponse(
         status_code=200,
         message=message,
+        data_count=len(data) if data is not None else 0,
         data=data
     )
 
