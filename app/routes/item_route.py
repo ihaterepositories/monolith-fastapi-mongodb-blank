@@ -1,4 +1,4 @@
-from config import items_collection
+from config import items_collection, REDIS_HOST, REDIS_PORT
 from app.models.item import Item
 from app.utils.serialization.item_serializer import serialize_individual, serialize_list
 from app.utils.responses.response_creator import create_ok, create_error
@@ -10,7 +10,7 @@ import redis.asyncio as redis
 import json
 
 item_router = APIRouter()
-redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
 # GET all items (sorting, limiting, skipping, caching)
 @item_router.get("/items", summary="Get all items", description="Get all items from the database")

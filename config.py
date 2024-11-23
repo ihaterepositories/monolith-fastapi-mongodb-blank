@@ -5,7 +5,8 @@ import os
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
-REDIS_URI = os.getenv("REDIS_URI")
+REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = os.getenv("REDIS_PORT")
 
 client = MongoClient(MONGO_URI)
 db = client.item_db
