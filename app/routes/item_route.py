@@ -12,7 +12,7 @@ import json
 item_router = APIRouter()
 redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
-# GET all items (sorting, limiting, skipping, caching)
+# GET all items (sorting, limiting, skipping)
 @item_router.get("/items", summary="Get all items", description="Get all items from the database")
 async def get_items(
     sort: str = Query(None, description="Sort items by field"),
@@ -21,18 +21,12 @@ async def get_items(
     skip: int = Query(0, description="Skip the first n items")
     ):
 
-    cache_key = f"items:{sort}:{order}:{limit}:{skip}"
-    cached_items = await redis_client.get(cache_key)
-    if cached_items:
-        return create_ok("Items found in cache", json.loads(cached_items))
-
     try:
         if sort is None:
             items = serialize_list(items_collection.find().limit(limit).skip(skip))
         else:
             items = serialize_list(items_collection.find().sort(sort, order).limit(limit).skip(skip))
 
-        await redis_client.set(cache_key, json.dumps(items), ex=3600)
         return create_ok("Items found", items)
     
     except PyMongoError as e:
